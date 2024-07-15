@@ -1,0 +1,5 @@
+# uuidv7-sql extension
+comment = 'Pure SQL functions to handle UUIDs version 7 (see RFC 9562)'
+default_version = '1.0'
+relocatable = true
+superuser = false
