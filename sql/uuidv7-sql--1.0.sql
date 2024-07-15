@@ -1,6 +1,3 @@
--- complain if script is sourced in psql, rather than via CREATE EXTENSION
-\echo Use CREATE EXTENSION "uuidv7-sql" to load this file. \quit
-
 /* See the UUID Version 7 specification at
    https://www.rfc-editor.org/rfc/rfc9562#name-uuid-version-7 */
 
@@ -35,7 +32,7 @@ COMMENT ON FUNCTION uuidv7() IS
       - 12 bits for the fractional part after the milliseconds
    - 8 bytes of randomness from the second half of a uuidv4
  */
-CREATE OR REPLACE FUNCTION uuidv7_sub_ms() RETURNS uuid
+CREATE FUNCTION uuidv7_sub_ms() RETURNS uuid
 AS $$
  select encode(
    substring(int8send(floor(t_ms)::int8) from 3) ||
