@@ -3,7 +3,7 @@
 
 
 /* Main function to generate a uuidv7 value with millisecond precision */
-CREATE FUNCTION uuidv7() RETURNS uuid
+CREATE FUNCTION uuidv7(timestamptz DEFAULT clock_timestamp()) RETURNS uuid
 AS $$
   -- Replace the first 48 bits of a uuidv4 with the current
   -- number of milliseconds since 1970-01-01 UTC
@@ -12,7 +12,7 @@ AS $$
     set_bit(
       set_bit(
         overlay(uuid_send(gen_random_uuid()) placing
-	  substring(int8send((extract(epoch from clock_timestamp())*1000)::bigint) from 3)
+	  substring(int8send((extract(epoch from $1)*1000)::bigint) from 3)
 	  from 1 for 6),
 	52, 1),
       53, 1), 'hex')::uuid;
@@ -32,14 +32,14 @@ COMMENT ON FUNCTION uuidv7() IS
       - 12 bits for the fractional part after the milliseconds
    - 8 bytes of randomness from the second half of a uuidv4
  */
-CREATE FUNCTION uuidv7_sub_ms() RETURNS uuid
+CREATE FUNCTION uuidv7_sub_ms(timestamptz DEFAULT clock_timestamp()) RETURNS uuid
 AS $$
  select encode(
    substring(int8send(floor(t_ms)::int8) from 3) ||
    int2send((7<<12)::int2 | ((t_ms-floor(t_ms))*4096)::int2) ||
    substring(uuid_send(gen_random_uuid()) from 9 for 8)
   , 'hex')::uuid
-  from (select extract(epoch from clock_timestamp())*1000 as t_ms) s
+  from (select extract(epoch from $1)*1000 as t_ms) s
 $$ LANGUAGE sql volatile;
 
 COMMENT ON FUNCTION uuidv7_sub_ms() IS
