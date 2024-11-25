@@ -23,10 +23,20 @@ To activate the extension in the target databases:
 ## Functions
 
 ### `uuidv7() -> uuid`
-Generate a UUID v7 value with millisecond precision and 74 bits of randomness.
+Generate a UUID v7 value using the current time with millisecond precision
+and 74 bits of randomness.
+
+### `uuidv7(timestamptz) -> uuid`
+Generate a UUID v7 value using the given time with millisecond precision
+and 74 bits of randomness.
 
 ### `uuidv7_sub_ms() -> uuid`
-Generate a UUID v7 value with sub-millisecond precision (up to 0.25 µs), with 62 bits of randomness.
+Generate a UUID v7 value using the current time with sub-millisecond
+precision (up to 0.25 µs), with 62 bits of randomness.
+
+### `uuidv7_sub_ms(timestamptz) -> uuid`
+Generate a UUID v7 value using the given time with sub-millisecond
+precision (up to 0.25 µs), with 62 bits of randomness.
 
 ### `uuidv7_extract_timestamp(uuid) -> timestamptz`
 Extract the timestamp with millisecond precision from the given UUID v7 value.
