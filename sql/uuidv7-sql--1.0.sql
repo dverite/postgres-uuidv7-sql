@@ -18,7 +18,7 @@ AS $$
       53, 1), 'hex')::uuid;
 $$ LANGUAGE sql volatile;
 
-COMMENT ON FUNCTION uuidv7() IS
+COMMENT ON FUNCTION uuidv7 IS
 'Generate a uuid-v7 value with a 48-bit timestamp (millisecond precision) and 74 bits of randomness';
 
 
@@ -42,7 +42,7 @@ AS $$
   from (select extract(epoch from $1)*1000 as t_ms) s
 $$ LANGUAGE sql volatile;
 
-COMMENT ON FUNCTION uuidv7_sub_ms() IS
+COMMENT ON FUNCTION uuidv7_sub_ms IS
 'Generate a uuid-v7 value with a 60-bit timestamp (sub-millisecond precision) and 62 bits of randomness';
 
 /* Extract the timestamp in the first 6 bytes of the uuidv7 value.
