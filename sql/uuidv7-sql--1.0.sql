@@ -16,9 +16,9 @@ AS $$
 	  from 1 for 6),
 	52, 1),
       53, 1), 'hex')::uuid;
-$$ LANGUAGE sql volatile;
+$$ LANGUAGE sql volatile parallel safe;
 
-COMMENT ON FUNCTION uuidv7 IS
+COMMENT ON FUNCTION uuidv7(timestamptz) IS
 'Generate a uuid-v7 value with a 48-bit timestamp (millisecond precision) and 74 bits of randomness';
 
 
@@ -40,9 +40,9 @@ AS $$
    substring(uuid_send(gen_random_uuid()) from 9 for 8)
   , 'hex')::uuid
   from (select extract(epoch from $1)*1000 as t_ms) s
-$$ LANGUAGE sql volatile;
+$$ LANGUAGE sql volatile parallel safe;
 
-COMMENT ON FUNCTION uuidv7_sub_ms IS
+COMMENT ON FUNCTION uuidv7_sub_ms(timestamptz) IS
 'Generate a uuid-v7 value with a 60-bit timestamp (sub-millisecond precision) and 62 bits of randomness';
 
 /* Extract the timestamp in the first 6 bytes of the uuidv7 value.
@@ -54,7 +54,7 @@ AS $$
  select to_timestamp(
    right(substring(uuid_send($1) from 1 for 6)::text, -1)::bit(48)::int8 -- milliseconds
     /1000.0);
-$$ LANGUAGE sql immutable strict;
+$$ LANGUAGE sql immutable strict parallel safe;
 
 COMMENT ON FUNCTION uuidv7_extract_timestamp(uuid) IS
 'Return the timestamp stored in the first 48 bits of the UUID v7 value';
@@ -68,7 +68,7 @@ AS $$
       placing substring(int8send(floor(extract(epoch from $1) * 1000)::bigint) from 3)
         from 1 for 6),
     'hex')::uuid;
-$$ LANGUAGE sql stable strict;
+$$ LANGUAGE sql stable strict parallel safe;
 
 COMMENT ON FUNCTION uuidv7_boundary(timestamptz) IS
 'Generate a non-random uuidv7 with the given timestamp (first 48 bits) and all random bits to 0. As the smallest possible uuidv7 for that timestamp, it may be used as a boundary for partitions.';
