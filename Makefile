@@ -1,5 +1,5 @@
 EXTENSION = uuidv7-sql
-EXTVERSION = 1.0
+EXTVERSION = 1.1
 PG_CONFIG = pg_config
 
 DATA = $(wildcard sql/*.sql)
