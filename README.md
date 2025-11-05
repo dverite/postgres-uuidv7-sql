@@ -24,7 +24,11 @@ To activate the extension in the target databases:
 
 ### `uuidv7() -> uuid`
 Generate a UUID v7 value using the current time with millisecond precision
-and 74 bits of randomness.
+and 74 bits of randomness. With PostgreSQL version 18 or newer,
+a [built-in function](https://www.postgresql.org/docs/18/functions-uuid.html) with the same name exists in `pg_catalog`,
+coming first in the search path. You may prefix `uuidv7` with the schema
+(for instance `public.uuidv7()`) to specifically use the version of
+this extension, or just use the built-in function instead.
 
 ### `uuidv7(timestamptz) -> uuid`
 Generate a UUID v7 value using the given time with millisecond precision
